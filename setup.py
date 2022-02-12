@@ -5,7 +5,6 @@ import re
 
 from setuptools import setup, find_packages
 
-
 def get_file(*paths):
     path = os.path.join(*paths)
     try:
