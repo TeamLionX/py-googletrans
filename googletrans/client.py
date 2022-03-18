@@ -77,7 +77,7 @@ class Translator:
                 client=self.client, host=self.service_urls[0])
 
             #if we have a service url pointing to client api we force the use of it as defaut client
-            for t in enumerate(service_urls):
+            for _ in enumerate(service_urls):
                 api_type = re.search('googleapis',service_urls[0])
                 if (api_type):
                     self.service_urls = ['translate.googleapis.com']
@@ -133,13 +133,10 @@ class Translator:
             14: 'see-also',
         }
 
-        extra = {}
-
-        for index, category in response_parts_name_mapping.items():
-            extra[category] = data[index] if (
-                index < len(data) and data[index]) else None
-
-        return extra
+        return {
+            category: data[index] if (index < len(data) and data[index]) else None
+            for index, category in response_parts_name_mapping.items()
+        }
 
     def translate(self, text, dest='en', src='auto', **kwargs):
         """Translate text from source language to destination language
@@ -210,7 +207,7 @@ class Translator:
         data, response = self._translate(text, dest, src, kwargs)
 
         # this code will be updated when the format is changed.
-        translated = ''.join([d[0] if d[0] else '' for d in data[0]])
+        translated = ''.join([d[0] or '' for d in data[0]])
 
         extra_data = self._parse_extra_data(data)
 
